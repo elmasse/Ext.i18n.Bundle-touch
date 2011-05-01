@@ -28,7 +28,6 @@ Ext.i18n.PropertyReader = function(config){
 		model: Ext.ModelMgr.types['PropertyModel']
     });
 	
-//	recordType = recordType || Ext.data.Record.create(['value']);
 	
 	//call super
 	Ext.i18n.PropertyReader.superclass.constructor.call(this, config); 

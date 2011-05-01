@@ -3,13 +3,13 @@ Ext.ns('Ext.i18n');
 /**
  * @class Ext.18n.Bundle
  * @constructor
- * @version 0.2.1
+ * @version 0.2.2
  * @param config.bundle: {String} Bundle Name.
  * @param config.path: {String} Bundle Folder URI. Optional.
  * @param config.lang: {String} Language in the form xx-YY where:
  * 		xx: Language code (2 characters lowercase) YY: Country code (2 characters upercase). 
  * Optional. Default to browser's language. If it cannot be determined default to en-US.
- * @param config.method: {String} request method. POST | GET. Optional. Default to POST
+ * @param config.method: {String} request method. POST | GET. Optional. Default to GET
  * 	
  * @author Maximiliano Fierro (elmasse)
  */
@@ -23,12 +23,14 @@ Ext.i18n.Bundle = function(config){
 	var url = this.buildURL(this.language);
 	
     Ext.i18n.Bundle.superclass.constructor.call(this, {
-    	autoLoad: true,
     	proxy: this.createProxy(url),
         reader: new Ext.i18n.PropertyReader()
     });
 
 	this.proxy.on('exception', this.loadParent, this, {single: true});
+	this.on('load', this.onBundleLoad, this);
+	
+	this.load();
 };
 
 Ext.extend(Ext.i18n.Bundle, Ext.data.Store,{ 
@@ -66,14 +68,17 @@ Ext.extend(Ext.i18n.Bundle, Ext.data.Store,{
 		this.on('loaded', this.readyFn, this, {single: true});
 	},
 	
-	onProxyRead: function(operation) {
-		Ext.i18n.Bundle.superclass.onProxyRead.call(this, operation);
-		
-		if(operation.wasSuccessful()){
+	onBundleLoad: function(store, record, success, op) {
+		if(success){
 			this.fireEvent('loaded');
 		}
     },
 	
+	onProxyLoad: function(op){
+		if(op.getRecords()){
+			Ext.i18n.Bundle.superclass.onProxyLoad.apply(this, arguments);
+		}
+	},
 	
 	/**
 	 * @private
@@ -92,7 +97,8 @@ Ext.extend(Ext.i18n.Bundle, Ext.data.Store,{
 	 */
 	loadParent: function(){
 		var url = this.buildURL();
-		this.proxy = this.createProxy(url);
+		this.proxy.url = url;
+		// this.proxy = this.createProxy(url);
 		this.load();			
 	},
 	
@@ -100,10 +106,10 @@ Ext.extend(Ext.i18n.Bundle, Ext.data.Store,{
 	 * @private
 	 */
 	createProxy: function(url){
-		return new Ext.data.HttpProxy({
+		return new Ext.data.AjaxProxy({
     		url: url, 
     		method: this.method,
-			defaultReaderType: 'property' 
+			defaultReaderType: 'property'
     	});
 	},
 	
