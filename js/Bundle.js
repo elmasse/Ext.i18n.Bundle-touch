@@ -23,8 +23,11 @@ Ext.i18n.Bundle = function(config){
 	var url = this.buildURL(this.language);
 	
     Ext.i18n.Bundle.superclass.constructor.call(this, {
-    	proxy: this.createProxy(url),
-        reader: new Ext.i18n.PropertyReader()
+    	proxy: {
+			type: 'ajax',
+			url: url,
+	       	reader: new Ext.i18n.PropertyReader() // dunno why 'propertyReader' wont work
+		}
     });
 
 	this.proxy.on('exception', this.loadParent, this, {single: true});
@@ -68,12 +71,18 @@ Ext.extend(Ext.i18n.Bundle, Ext.data.Store,{
 		this.on('loaded', this.readyFn, this, {single: true});
 	},
 	
+	/**
+	 * @private
+	 */
 	onBundleLoad: function(store, record, success, op) {
 		if(success){
 			this.fireEvent('loaded');
 		}
     },
-	
+
+	/**
+	 * @private
+	 */
 	onProxyLoad: function(op){
 		if(op.getRecords()){
 			Ext.i18n.Bundle.superclass.onProxyLoad.apply(this, arguments);
@@ -96,21 +105,8 @@ Ext.extend(Ext.i18n.Bundle, Ext.data.Store,{
 	 * @private
 	 */
 	loadParent: function(){
-		var url = this.buildURL();
-		this.proxy.url = url;
-		// this.proxy = this.createProxy(url);
+		this.proxy.url = this.buildURL();
 		this.load();			
-	},
-	
-	/**
-	 * @private
-	 */
-	createProxy: function(url){
-		return new Ext.data.AjaxProxy({
-    		url: url, 
-    		method: this.method,
-			defaultReaderType: 'property'
-    	});
 	},
 	
 	/**

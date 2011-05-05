@@ -100,4 +100,4 @@ Ext.extend(Ext.i18n.PropertyReader, Ext.data.Reader,{
 
 });
 
-Ext.data.ReaderMgr.registerType('property', Ext.i18n.PropertyReader);
+Ext.data.ReaderMgr.registerType('propertyReader', Ext.i18n.PropertyReader);
