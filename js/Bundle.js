@@ -10,6 +10,7 @@ Ext.ns('Ext.i18n');
  * 		xx: Language code (2 characters lowercase) YY: Country code (2 characters upercase). 
  * Optional. Default to browser's language. If it cannot be determined default to en-US.
  * @param config.method: {String} request method. POST | GET. Optional. Default to GET
+ * @param config.noCache {bool} whether or not to disable Proxy's cache. Optional. Defaults to true. 
  * 	
  * @author Maximiliano Fierro (elmasse)
  */
@@ -20,12 +21,14 @@ Ext.i18n.Bundle = function(config){
 	this.language = this.formatLanguageCode(config.lang || this.guessLanguage()); 
 	this.method = config.method || 'GET';
 
-	var url = this.buildURL(this.language);
+	var url = this.buildURL(this.language),
+		noCache = (config.noCache !== false);
 	
     Ext.i18n.Bundle.superclass.constructor.call(this, {
     	proxy: {
 			type: 'ajax',
 			url: url,
+			noCache: noCache,
 	       	reader: new Ext.i18n.PropertyReader() // dunno why 'propertyReader' wont work
 		}
     });

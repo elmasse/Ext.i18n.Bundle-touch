@@ -13,7 +13,7 @@ Ext.regApplication({
 		if(params.lang)
 			lang = params.lang;
 	
-		var bundle = new Ext.i18n.Bundle({bundle:'Application', path:'resources', lang: lang});
+		bundle = new Ext.i18n.Bundle({bundle:'Application', path:'resources', lang: lang});
 		bundle.onReady(function(){
 
 			var toolbar = new Ext.Toolbar({
