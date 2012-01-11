@@ -1,20 +1,22 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-	<title>Ext.i18n.Bundle [Test] on Sencha Touch</title>
-    
-	<link rel="stylesheet" type="text/css" href="sencha/resources/css/sencha-touch.css" />
-    <script type="text/javascript" src="sencha/sencha-touch-debug.js"></script>
-  
-	<!-- Uncomment next line if you plan to work on phonegap or load local files via xhr -->
-	<!--
-	<script type="text/javascript" src="js/AjaxLocalProxy.js" charset="utf-8"></script>
-   -->
-	<script type="text/javascript" src="js/PropertyReader.js"></script>    
-	<script type="text/javascript" src="js/Bundle.js"></script>
-	
-	<script type="text/javascript" src="js/test.js"></script>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<title>Ext.i18n.Bundle for Sencha Touch</title>
+	<meta name="author" content="Maximiliano Fierro">
+	<link rel="stylesheet" href="../common-libs/sencha-touch-2-pr3/resources/css/sencha-touch.css">
+	<script src="../common-libs/sencha-touch-2-pr3/sencha-touch-all-debug.js"></script>
+
+	<script>
+		Ext.Loader.setConfig({
+	    	enabled: true,
+	    	paths: {
+	        	'Ext.i18n': 'i18n'
+	    	}
+		});
+	</script>
+
+	<script type="text/javascript" src="demo/demo.js"></script>
 	</head>
 <body>
 
