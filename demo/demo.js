@@ -1,7 +1,24 @@
+Ext.require('patch.Button'); 
+
+Ext.require('Ext.i18n.Bundle', function(){
+	bundle = Ext.create('Ext.i18n.Bundle',{
+		bundle: 'Application',
+		lang: 'en-US',
+		path: 'resources',
+		noCache: true
+	});
+
+});
+
 Ext.application({
 	name: 'AppTest',
-	launch: function(){
+	appFolder: 'demo',
+	controllers:['Main', 'Settings']
 
+	 
+/*
+	launch: function(){
+		
 		bundle = Ext.create('Ext.i18n.Bundle',{
 			bundle: 'Application',
 			lang: 'es-ES',
@@ -16,4 +33,5 @@ Ext.application({
 			});
 		});
 	}
+*/
 });	

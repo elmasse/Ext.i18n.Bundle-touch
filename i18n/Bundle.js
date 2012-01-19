@@ -1,31 +1,9 @@
 /**
- * @author Maximiliano Fierr
+ * @author Maximiliano Fierro
  * @class Ext.i18n.Bundle
  * @extends Ext.data.Store
  *
  * Bundle is used to load .properties bundle files based in language and expose the bundle's keys thru getMsg method.
- <code>
-Ext.application({
-	name: 'AppTest',
-	launch: function(){
-
-		bundle = Ext.create('Ext.i18n.Bundle',{
-			bundle: 'Application',
-			lang: 'es-ES',
-			path: 'resources',
-			noCache: false
-		});
-
-		bundle.onReady(function(){
-			Ext.create('Ext.Panel',{
-				fullscreen: true,
-				html: bundle.getMsg('panel.html')
-			});
-		});
-	}
-});
-
- </code>
  */
 Ext.define('Ext.i18n.Bundle', {
 	extend: 'Ext.data.Store',
@@ -38,6 +16,8 @@ Ext.define('Ext.i18n.Bundle', {
 	defaultLanguage: 'en-US',
 	//@private
 	resourceExt: '.properties',
+	//@private
+	cExp: /\{([\w\-]+)(?:\:([\w\.]*)(?:\((.*?)?\))?)?\}/g,
 	
 	config:{
 		/**
@@ -72,7 +52,6 @@ Ext.define('Ext.i18n.Bundle', {
 			noCache = (config.noCache !== false),
 			url;
 
-		me.language = language;
 		me.bundle = config.bundle || me.bundle;
 		me.path = config.path || me.path;
 			
@@ -82,7 +61,6 @@ Ext.define('Ext.i18n.Bundle', {
 		delete config.noCache;
 		
 		Ext.applyIf(config, {
-			autoLoad: true,
 			model: 'Ext.i18n.model.Property',
 			proxy:{
 				type: 'ajax',
@@ -101,7 +79,7 @@ Ext.define('Ext.i18n.Bundle', {
 		});
 
 		me.callParent([config]);
-		me.proxy.on('exception', this.loadParent, this, {single: true});
+		me.setLanguage(language);
 	},
 	
 	/**
@@ -112,34 +90,60 @@ Ext.define('Ext.i18n.Bundle', {
 				|| navigator.userLanguage || this.defaultLanguage);
 	},
 	
-	/**
-	 * @method: getMsg
-	 * Returns the content associated with the bundle key or {bundle key}.undefined if it is not specified.
-	 * @param: key {String} Bundle key.
-	 * @return: {String} The bundle key content. 
-	 */
-	getMsg: function(key){
-		return this.getById(key)? Ext.util.Format.htmlDecode(this.getById(key).get('value')) : key + '.undefined';
+	message: function(key, obj){
+		var cKey = this.getContentKey(key),
+			data = '';
+			
+		for(var p in obj){
+			data+=' data-'+p+'="'+obj[p]+'"';
+		}	
+			
+		return '<span class="bundle '+cKey+'"' + data +'></span>';
 	},
-	
-	/**
-	 * @method: onReady
-	 * The fn will be called when the Bundle file is loaded.
-	 * @param: fn {Function}
-	 */
-	onReady: function(fn){
-		this.readyFn = fn;
-		this.on('loaded', this.readyFn, this);
+
+	getLanguage: function(){
+		return this.language;
+	},
+		
+
+	setLanguage: function(lang){
+		var me = this;
+		
+		me.language = lang;
+		me.proxy.on('exception', me.loadParent, me, {single: true});
+		me.proxy.url = me.buildURL(me.language);
+		me.load();
 	},
 	
 	/**
 	 * @private
 	 */
-	onBundleLoad: function(store, record, success, op) {
+	onBundleLoad: function(store, records, success, op) {
+		var me = this,
+			str = ' .bundle{height:0 !important; width:0!important;}\n';
 		if(success){
-			this.fireEvent('loaded');
+			Ext.Array.forEach(records, function(r, i){
+				str += me.createContentLine(r);
+			});
+			me.appendRules(str);
 		}
     },
+
+	appendRules: function(str){
+		var style = document.createElement('style'),
+			sId = 'localized-css',//this.proxy.url,
+			head = Ext.getHead(),
+			el;
+		
+		el = Ext.get(sId);
+		if(el) el.remove();
+		
+		style.setAttribute('id', sId);
+		style.innerHTML = str;
+		
+		head.appendChild(style);
+	},
+
 
 	/**
 	 * @private
@@ -178,8 +182,33 @@ Ext.define('Ext.i18n.Bundle', {
 		langCodes[0] = (langCodes[0]) ? langCodes[0].toLowerCase() : '';
 		langCodes[1] = (langCodes[1]) ? langCodes[1].toUpperCase() : '';
 		return langCodes.join('-');
+	},
+	
+	createContentLine: function(record){
+		var key = record.get('key'),
+			value = record.get('value'),
+			cKey;
+			
+		cKey = this.getContentKey(key);
+		cValue = this.getContentValue(value);	
+		
+		return '.' + cKey + ':after { content:' + cValue + ';}\n';
+	},
+	
+	getContentKey: function(k){
+		return 'bundle-'+k.replace(/\./g, '-');
+	},
+	
+	getContentValue: function(v){
+		var ret;
+		function fn(m, n){
+			return '\" attr(data-'+n+') \"';	
+		}
+		ret = v.replace(this.cExp, fn);
+		
+		//ret = escape(ret).replace(/%/g, '\\0000');
+		
+		return '\"'+ret+'\"';
 	}
-	
-	
 	
 });
