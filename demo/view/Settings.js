@@ -4,6 +4,10 @@ Ext.define('AppTest.view.Settings',{
 	
 	config:{
 		items:[{
+			xtype: 'toolbar',
+			docked: 'top',
+			title: bundle.message('settings.title')
+		},{
 			xtype:'fieldset',
 			title: bundle.message('settings.language.title'),
 			items:[{
@@ -22,4 +26,4 @@ Ext.define('AppTest.view.Settings',{
              }]		
 		}]
 	}
-})
+});

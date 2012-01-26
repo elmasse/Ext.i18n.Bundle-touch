@@ -107,11 +107,12 @@ Ext.define('Ext.i18n.Bundle', {
 		
 
 	setLanguage: function(lang){
-		var me = this;
+		var me = this,
+			proxy = this.getProxy();
 		
 		me.language = lang;
-		me.proxy.on('exception', me.loadParent, me, {single: true});
-		me.proxy.url = me.buildURL(me.language);
+		proxy.on('exception', me.loadParent, me, {single: true});
+		proxy.setUrl(me.buildURL(me.language));
 		me.load();
 	},
 	
@@ -170,7 +171,7 @@ Ext.define('Ext.i18n.Bundle', {
 	 * @private
 	 */
 	loadParent: function(){
-		this.proxy.url = this.buildURL();
+		this.getProxy().setUrl(this.buildURL());
 		this.load();			
 	},
 	

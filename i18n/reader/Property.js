@@ -14,41 +14,49 @@ Ext.define('Ext.i18n.reader.Property', {
 		this.callParent([config]);
 	},
 	
-	read: function(response){
-		var propertyFile = response.responseText;
-		if(!propertyFile)
-			throw {message: "PropertyReader.read: File not found"};
-						
-		return this.readRecords(propertyFile);
-	},
 	
-	readRecords: function(propertyFile){
-		var Record = this.recordType,
-			Model = this.model,
-			records = [], record, kv,
-			f = this.readLines(propertyFile),
+	getResponseData: function(response){
+		return response;
+	},
+
+	getData: function(data){
+		var records = [], record, kv,
+			f = this.readLines(data),
 			l = f.length;
-		
+
 		for(var i = 0; i < l; i++){
 			var kl = f[i].search(/[\s:=]/);
-				record = new Model({
+				record = {
 				    value : this.clearValueExtraChars(f[i].substring(kl+1)),
 				    key  :  this.clearKeyExtraChars(f[i].substring(0, kl))
-				});
-
+				};
 				records[i] = record;
 		}
-		
-		return Ext.create('Ext.data.ResultSet', {
-            total  : records.length,
-            count  : records.length,
-            records: records,
-            success: true
-        });
+		return records;
 	},
 	
-	createAccessor: function(){},
-	
+	createAccessor: function() {
+        var re = /[\[\.]/;
+
+        return function(expr) {
+            if (Ext.isEmpty(expr)) {
+                return Ext.emptyFn;
+            }
+            if (Ext.isFunction(expr)) {
+                return expr;
+            }
+            if (this._useSimpleAccessors !== true) {
+                var i = String(expr).search(re);
+                if (i >= 0) {
+                    return Ext.functionFactory('obj', 'return obj' + (i > 0 ? '.' : '') + expr);
+                }
+            }
+            return function(obj) {
+                return obj[expr];
+            };
+        };
+    }(),
+		
 	clearKeyExtraChars: function(s){
 		return (s ? s.replace(/[:=]/gi, "") : "");
 	},

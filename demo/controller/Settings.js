@@ -12,9 +12,9 @@ Ext.define('AppTest.controller.Settings', {
 	},
 	
 	onLanguageChange: function(field, evt, opts){
-		var value = field._value, //field.getValue() returns true????
+		var value = field.getValue()
 			current = bundle.getLanguage();
-
+			
 		if(current !== value)
 		 	bundle.setLanguage(value);
 	}
