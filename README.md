@@ -1,6 +1,6 @@
 # Ext.i18n.Bundle
 
-##v0.3
+##v0.3.1
 
 Ext.i18n.Bundle allows to use properties files (or bundle files) from Java to use them as i18n resources with Sencha Touch.
 
@@ -40,11 +40,13 @@ You need to call your code once your bundle file is loaded, so you need to place
 
 ##Release Notes
 
+###v0.3.1
+* Sencha Touch 2 PR4 compatible code.
+* Patch for PhoneGap.  PhoneGap is using XHR thru file:// protocol then AjaxProxy doesn't retrieve data.
+
 ###v0.3
 * Sencha Touch 2 PR3 comaptible code.
 * Removed config method. All the requests are made using GET method.
 * Solved issue with extra arguments passed to URL. Now you have no limits, start nor group extra parameters in URL.
 
-###Known issues
-* PhoneGap is using XHR thru file:// protocol then AjaxProxy doesn't retrieve data. Note: This was solved in previous version for Sencha Touch 1 overriding AjaxProxy createRequestCallback method (v0.2.2) see js/AjaxLocalProxy.js
 	

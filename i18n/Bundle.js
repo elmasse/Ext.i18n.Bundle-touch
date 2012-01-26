@@ -101,7 +101,7 @@ Ext.define('Ext.i18n.Bundle', {
 		});
 
 		me.callParent([config]);
-		me.proxy.on('exception', this.loadParent, this, {single: true});
+		me.getProxy().on('exception', this.loadParent, this, {single: true});
 	},
 	
 	/**
@@ -166,7 +166,7 @@ Ext.define('Ext.i18n.Bundle', {
 	 * @private
 	 */
 	loadParent: function(){
-		this.proxy.url = this.buildURL();
+		this.getProxy().setUrl(this.buildURL());
 		this.load();			
 	},
 	
