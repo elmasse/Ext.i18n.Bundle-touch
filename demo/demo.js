@@ -1,5 +1,3 @@
-Ext.require('patch.Button'); 
-
 Ext.require('Ext.i18n.Bundle', function(){
 	bundle = Ext.create('Ext.i18n.Bundle',{
 		bundle: 'Application',

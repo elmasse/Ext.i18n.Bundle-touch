@@ -6,7 +6,10 @@ Ext.define('AppTest.view.Settings',{
 		items:[{
 			xtype: 'toolbar',
 			docked: 'top',
-			title: bundle.message('settings.title')
+			title: bundle.message('settings.title'),
+			items:[{
+				text: bundle.message('settings.button.text')
+			}]
 		},{
 			xtype:'fieldset',
 			title: bundle.message('settings.language.title'),
