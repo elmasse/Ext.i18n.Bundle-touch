@@ -5,7 +5,6 @@ Ext.define('AppTest.view.Main', {
 		
 	config: {
 		fullscreen: true,
-		fullscreen: true,
 	    tabBarPosition: 'bottom',
 	
 		items:[{
