@@ -1,6 +1,6 @@
 # Ext.i18n.Bundle
 
-##v0.3.1
+##v0.3.2
 
 Ext.i18n.Bundle allows to use properties files (or bundle files) from Java to use them as i18n resources with Sencha Touch.
 
@@ -39,6 +39,10 @@ for the default bundle file.
 You need to call your code once your bundle file is loaded, so you need to place your code inside onReady method (2). Finally, to access a bundle key, use getMsg method passing the key as argument. That function will retrieve the content for the given key or a String with key name followed by .undefined so you can track what is not actually defined in your bundle file.
 
 ##Release Notes
+
+###v0.3.2
+* Sencha Touch 2 Beta1 compatible code.
+
 
 ###v0.3.1
 * Sencha Touch 2 PR4 compatible code.
