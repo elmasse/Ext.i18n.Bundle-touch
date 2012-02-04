@@ -1,5 +1,5 @@
 Ext.define('Ext.i18n.reader.Property', {
-    extend: 'Ext.data.reader.Reader',
+    extend: 'Ext.data.reader.Json',
     alias : 'reader.property',
 	
 	constructor: function(config){
@@ -34,28 +34,7 @@ Ext.define('Ext.i18n.reader.Property', {
 		}
 		return records;
 	},
-	
-	createAccessor: function() {
-        var re = /[\[\.]/;
 
-        return function(expr) {
-            if (Ext.isEmpty(expr)) {
-                return Ext.emptyFn;
-            }
-            if (Ext.isFunction(expr)) {
-                return expr;
-            }
-            if (this._useSimpleAccessors !== true) {
-                var i = String(expr).search(re);
-                if (i >= 0) {
-                    return Ext.functionFactory('obj', 'return obj' + (i > 0 ? '.' : '') + expr);
-                }
-            }
-            return function(obj) {
-                return obj[expr];
-            };
-        };
-    }(),
 		
 	clearKeyExtraChars: function(s){
 		return (s ? s.replace(/[:=]/gi, "") : "");
@@ -66,7 +45,8 @@ Ext.define('Ext.i18n.reader.Property', {
 	},
 	
 	//private
-	readLines: function(file){
+	readLines: function(data){
+		var file = data.responseText;
 		return (file ? file.match(/.*(.*\\\s*\n)+.*|^((?!^\s*[#!]).).*$/gim) : []);
 	}
 	

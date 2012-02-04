@@ -1,5 +1,7 @@
 Ext.define('AppTest.view.Main', {
 	extend: 'Ext.TabPanel',
+	xtype: 'mainview',
+	alias: 'widget.mainview',
 	
 	requires:['AppTest.view.Settings'],
 		

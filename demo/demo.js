@@ -11,8 +11,14 @@ Ext.require('Ext.i18n.Bundle', function(){
 Ext.application({
 	name: 'AppTest',
 	appFolder: 'demo',
-	controllers:['Main', 'Settings']
-
+	views: ['Main'],
+	controllers:['Main', 'Settings'],
+  
+  	launch: function() {
+        Ext.Viewport.add({
+            xclass: 'AppTest.view.Main'
+        });
+    }
 	 
 /*
 	launch: function(){

@@ -137,7 +137,7 @@ Ext.define('Ext.i18n.Bundle', {
 			el;
 		
 		el = Ext.get(sId);
-		if(el) el.remove();
+		if(el) el.destroy();
 		
 		style.setAttribute('id', sId);
 		style.innerHTML = str;
