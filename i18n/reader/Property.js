@@ -6,7 +6,6 @@ Ext.define('Ext.i18n.reader.Property', {
 		config = config || {};
 		
 		Ext.applyIf(config, {
-	        idProperty: 'key',
 	        successProperty: 'success',
 	        totalProperty: 'total'
 	    });
