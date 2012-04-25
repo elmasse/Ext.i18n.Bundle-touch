@@ -12,9 +12,11 @@ Ext.define('AppTest.controller.Settings', {
 	},
 	
 	onLanguageChange: function(field, evt, opts){
-		var value = field.getValue()
+		var value = field.getSubmitValue(),
 			current = bundle.getLanguage();
-			
+		
+		//This is stupid, WTF is getSubmitValue????? 
+
 		if(current !== value)
 		 	bundle.setLanguage(value);
 	}
