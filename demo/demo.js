@@ -1,41 +1,24 @@
-Ext.require('Ext.i18n.Bundle', function(){
-	bundle = Ext.create('Ext.i18n.Bundle',{
-		bundle: 'Application',
-		lang: 'en-US',
-		path: 'resources',
-		noCache: true
-	});
-
-});
-
 Ext.application({
 	name: 'AppTest',
 	appFolder: 'demo',
+
+	requires: ['Ext.i18n.Bundle'],
+
 	views: ['Main'],
 	controllers:['Main', 'Settings'],
   
   	launch: function() {
+
+  		Ext.i18n.Bundle.configure({
+			bundle: 'Application',
+			language: 'en-US',
+			path: 'resources',
+			noCache: false
+  		});
+
         Ext.Viewport.add({
             xclass: 'AppTest.view.Main'
         });
     }
-	 
-/*
-	launch: function(){
-		
-		bundle = Ext.create('Ext.i18n.Bundle',{
-			bundle: 'Application',
-			lang: 'es-ES',
-			path: 'resources',
-			noCache: true
-		});
-		
-		bundle.onReady(function(){
-			Ext.create('Ext.Panel',{
-				fullscreen: true,
-				html: bundle.getMsg('panel.html')
-			});
-		});
-	}
-*/
+
 });	

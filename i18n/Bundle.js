@@ -3,10 +3,13 @@
  * @class Ext.i18n.Bundle
  * @extends Ext.data.Store
  *
- * Bundle is used to load .properties bundle files based in language and expose the bundle's keys thru getMsg method.
  */
 Ext.define('Ext.i18n.Bundle', {
 	extend: 'Ext.data.Store',
+	xtype: 'bundle',
+
+	singleton: true,
+	
 	requires: [
 		'Ext.i18n.reader.Property',
 		'Ext.i18n.model.Property'
@@ -16,6 +19,7 @@ Ext.define('Ext.i18n.Bundle', {
 	defaultLanguage: 'en-US',
 	//@private
 	resourceExt: '.properties',
+
 	//@private
 	cExp: /\{([\w\-]+)(?:\:([\w\.]*)(?:\((.*?)?\))?)?\}/g,
 	
@@ -26,51 +30,52 @@ Ext.define('Ext.i18n.Bundle', {
 		bundle: 'message',
 
 		/**
-		 * @cfg path {String} URI to properties files. Default to resources
+		 * @cfg path {String} URI to properties files. Default to 'resources'
 		 */
-		path: 'resources'
+		path: 'resources',
 
 		/**
-		 * @cfg lang {String} Language in the form xx-YY where:
+		 * @cfg language {String} Language in the form xx-YY where:
 		 * 		xx: Language code (2 characters lowercase) 
     	 *      YY: Country code (2 characters upercase). 
 		 * Optional. Default to browser's language. If it cannot be determined default to en-US.
 		 */
-		
+
 		/**
 		 * @cfg noCache {boolean} whether or not to disable Proxy's cache. Optional. Defaults to true. 
 		 */
-		
+
+
+		model: 'Ext.i18n.model.Property'
 	},
 	
+	/**
+     * @public
+     * @method configure will initialize the bundle with the given configuration
+     * @param config
+     * @param config.path {String} URI to properties files. Default to 'resources'
+     */
+	configure: function(config){
+		var me = this;
+
+		me.setPath(config.path);
+		me.setBundle(config.bundle);
+        me.setNoCache(config.noCache);
+        
+		me.setLanguage(config.language || me.guessLanguage());
+
+	},
 	
 	constructor: function(config){
 		config = config || {};
 
-		var me = this,
-			language = me.formatLanguageCode(config.lang || me.guessLanguage()),
-			noCache = (config.noCache !== false),
-			url;
-
-		me.bundle = config.bundle || me.bundle;
-		me.path = config.path || me.path;
-			
-		url = this.buildURL(language);
-
-		delete config.lang;
-		delete config.noCache;
-		
+		var me = this;
 		Ext.applyIf(config, {
-			model: 'Ext.i18n.model.Property',
 			proxy:{
 				type: 'ajax',
-				url: url,
-				noCache: noCache,
 				reader: {
 					type: 'property'
-				},
-				//avoid sending limit, start & group params to server
-				getParams: Ext.emptyFn
+				}
 			},
 			listeners:{
 				'load': this.onBundleLoad,
@@ -79,9 +84,20 @@ Ext.define('Ext.i18n.Bundle', {
 		});
 
 		me.callParent([config]);
-		me.setLanguage(language);
 	},
 	
+
+
+    setNoCache: function(value){
+        var me = this,
+            proxy = me.getProxy();
+
+        //avoid sending extra params   
+        proxy.getParams = Ext.emptyFn;
+
+        proxy.setNoCache(value); 
+    },
+
 	/**
 	 * @private
 	 */
@@ -90,6 +106,13 @@ Ext.define('Ext.i18n.Bundle', {
 				|| navigator.userLanguage || this.defaultLanguage);
 	},
 	
+    /**
+     * @public
+     * @method message will create the markup as a placeholder for the message key and paramaters
+     * @param key {String} the message key in the bundle file
+     * @param obj {Object} Optional. If the key message contains parameterized holder i.e {prop}
+     * obj will represent the data properties that fill out those holders i.e {prop: 'text'}
+     */
 	message: function(key, obj){
 		var cKey = this.getContentKey(key),
 			data = '';
@@ -101,11 +124,23 @@ Ext.define('Ext.i18n.Bundle', {
 		return '<span class="bundle '+cKey+'"' + data +'></span>';
 	},
 
+    /**
+     * @public
+     * @method getLanguage returns the current language
+     * @return {String}
+     */
 	getLanguage: function(){
 		return this.language;
 	},
 		
-
+    /**
+     * @public
+     * @method setLanguage
+     * @param lang {String} in the format:
+     *  xx-YY where:
+     *      xx: Language code (2 characters lowercase) 
+     *      YY: Country code (2 characters upercase). 
+     */    
 	setLanguage: function(lang){
 		var me = this,
 			proxy = this.getProxy();
@@ -159,9 +194,12 @@ Ext.define('Ext.i18n.Bundle', {
 	 * @private
 	 */
 	buildURL: function(language){
-		var url = '';
-		if (this.path) url+= this.path + '/';
-		url+=this.bundle;
+		var me = this,
+			url = '',
+			path = me.getPath();
+
+		if (path) url+= path + '/';
+		url+=me.getBundle();
 		if (language) url+= '_'+language;
 		url+=this.resourceExt;
 		return url;

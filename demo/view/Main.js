@@ -3,25 +3,28 @@ Ext.define('AppTest.view.Main', {
 	xtype: 'mainview',
 	alias: 'widget.mainview',
 	
-	requires:['AppTest.view.Settings'],
+	requires:[
+		'AppTest.view.Settings',
+		'Ext.i18n.Bundle'
+	],
 		
 	config: {
 		fullscreen: true,
 	    tabBarPosition: 'bottom',
 	
 		items:[{
-			title: bundle.message('home.icon.title'),
+			title: Ext.i18n.Bundle.message('home.icon.title'),
 			iconCls: 'home',
 			items: [{
 				xtype: 'toolbar',
 				docked: 'top',
-				title: bundle.message('home.title')
+				title: Ext.i18n.Bundle.message('home.title')
 			},{
-				html: bundle.message('home.html', {username: 'User'})
+				html: Ext.i18n.Bundle.message('home.html', {username: 'User'})
 			}]
 		},{
 			xtype: 'settings',
-			title: bundle.message('settings.icon.title'),
+			title: Ext.i18n.Bundle.message('settings.icon.title'),
 			iconCls: 'settings',
 		}] 
 	}

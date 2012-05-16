@@ -1,23 +1,21 @@
 Ext.define('AppTest.controller.Settings', {
 	extend: 'Ext.app.Controller',
-	
-	views: ['Settings'],
-	
-	init: function(){
-		this.control({
-			'formpanel radiofield':{
-				check: this.onLanguageChange
+
+	requires: ['Ext.i18n.Bundle'],
+
+	config:{
+		control:{
+			'settings radiofield':{
+				'check': 'onLanguageChange'
 			}
-		});
+		}
 	},
 	
 	onLanguageChange: function(field, evt, opts){
 		var value = field.getSubmitValue(),
-			current = bundle.getLanguage();
+			current = Ext.i18n.Bundle.getLanguage();
 		
-		//This is stupid, WTF is getSubmitValue????? 
-
 		if(current !== value)
-		 	bundle.setLanguage(value);
+		 	Ext.i18n.Bundle.setLanguage(value);
 	}
 });
