@@ -1,7 +1,8 @@
 # Ext.i18n.Bundle
 
 ## THIS VERSION IS NOT CURRENTLY ON DEVELOPMENT
-## Check the css-content branch for the latest version. This master verion will be removed soon since it has too many issues with the MVC approach.
+### Check the css-content branch for the latest version. This master version will be removed soon since it has too many issues with the MVC approach.
+
 
 ##v0.3.2
 
