@@ -31,16 +31,20 @@ Ext.define('AppTest.view.Settings',{
 
     initialize: function(){
         var me = this;
+
         me.on({
-            'painted': 'onPainted',
+            painted: this.onPainted,
             scope: me
         })
+
         me.callParent(arguments);
+
     },
 
     onPainted: function(cmp, opts){
-        var currentLang = Ext.i18n.Bundle.getLanguage(),
-            radio = cmp.down('radiofield[originalState='+currentLang+']');
+        var me = this,
+            currentLang = Ext.i18n.Bundle.getLanguage(),
+            radio = me.down('radiofield[originalState='+currentLang+']');
         if(radio){
             radio.setChecked(true);
         }
