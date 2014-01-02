@@ -45,27 +45,60 @@ Ext.application({
 });
 `````
 	
-Using Ext.i18n.Bundle is very simple. You just need to create your bundle instance. In this case we want to retrieve a bundle file called Application for Spanish language - es-ES - located at resources path. This will load a file called Application_es-ES.properties:
+Using Ext.i18n.Bundle is very simple. You just need to config your bundle instance. In this case we want to retrieve a bundle file called Application for Spanish language - es-ES - located at resources path. This will load a file called Application_es-ES.properties:
 
+````
 GET http://yourdomain/resources/Application_es-ES.properties
+````
 
 In case this file doesn't exist, then the bundle will try at:
 
+````
 GET http://yourdomain/resources/Application.properties
-
+````
 for the default bundle file.
 
 The steps are the following:
 
-1 - Declare the Ext.i18n.Bundle as required.
-2 - Define the bundle instance for the current application using the config options.
-3 - You can use a lazy initialization object to get bundle keys by specifying the type and key.
-4 - You can use the bundle instance from a tpl method if you want too.
+1 - Declare the Ext.i18n.Bundle as required.  
+2 - Define the bundle instance for the current application using the config options.  
+3 - You can use a lazy initialization object to get bundle keys by specifying the type and key.  
+4 - You can use the bundle instance from a tpl method if you want too.  
 
-The bundle instance is attached to the current Application instance, which you can access at `<Your App Name>.app` in the example we have `AppTest.app.bundle`.
+The bundle instance is attached to the current Application instance, which you can access at `<Your App Name>.app.bundle` in the example we have `AppTest.app.bundle`.
 
 **Note**: It is important to notice that bundle will be ready after the data is loaded. That's why the lazy initialization objects help to declare them in the config section of your components.
-In case you want to access the files by code, you have to do it inside a class method such as constructor or initialize methods.
+In case you want to access the keys by code, you have to do it inside a class method such as constructor or initialize methods.
+
+**DO NOT DO THIS:**
+
+````
+Ext.define('MyView', {
+	extends: 'Ext.Panel',
+	
+	config: {
+		html: AppTest.app.bundle.getMsg('my.html') + ' - this is mixed content'
+	}
+});
+
+````
+
+**DO THIS:**
+
+````
+Ext.define('MyView', {
+	extends: 'Ext.Panel',
+	
+	config: {/* ... */}
+
+	initialize: function() {
+		this.setHtml(AppTest.app.bundle.getMsg('my.html') + ' - this is mixed content')	
+	}	
+});
+
+````
+
+
 
 ##Release Notes
 
