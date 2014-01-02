@@ -92,13 +92,25 @@ Ext.define('MyView', {
 	config: {/* ... */}
 
 	initialize: function() {
-		this.setHtml(AppTest.app.bundle.getMsg('my.html') + ' - this is mixed content')	
+		this.setHtml(AppTest.app.bundle.getMsg('my.html') + ' - this is mixed content');
 	}	
 });
 
 ````
 
+It is important to notice as well that bundle lazy initialization objects cannot be mixed with text:
 
+**NOT VALID:**
+
+````
+Ext.define('MyView', {
+    extends: 'Ext.Panel',
+    
+    config: {
+        html: {type: 'bundle', key: 'my.html'} + ' - this is mixed content' // wrong!!!
+    }
+});
+````
 
 ##Release Notes
 
