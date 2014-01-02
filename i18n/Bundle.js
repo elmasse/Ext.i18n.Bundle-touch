@@ -242,7 +242,7 @@ Ext.define('Ext.i18n.Bundle', {
                 Ext.i18n.Bundle.instance = me.bundle;
 
             }else{
-                    me.callOverridden();
+                me.callOverridden();
             }
         }
     });
