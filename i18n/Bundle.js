@@ -1,5 +1,5 @@
 /**
- * @author Maximiliano Fierr
+ * @author Maximiliano Fierro
  * @class Ext.i18n.Bundle
  * @extends Ext.data.Store
  *
@@ -7,24 +7,39 @@
  <code>
 Ext.application({
     name: 'AppTest',
+
+    requires: ['Ext.i18n.Bundle'],
+
+    bundle: {
+        bundle: 'Application',
+        lang: 'es-ES',
+        path: 'resources',
+        noCache: true
+    },
+
     launch: function(){
-
-        bundle = Ext.create('Ext.i18n.Bundle',{
-            bundle: 'Application',
-            lang: 'es-ES',
-            path: 'resources',
-            noCache: false
-        });
-
-        bundle.onReady(function(){
-            Ext.create('Ext.Panel',{
-                fullscreen: true,
-                html: bundle.getMsg('panel.html')
-            });
+        Ext.create('Ext.Panel',{
+            fullscreen: true,
+            items: [
+                {
+                    xtype: 'titlebar',
+                    docked: 'top',
+                    title: {type: 'bundle', key: 'panel.title'}
+                }
+            ],
+            tpl: [
+                'Hello {name}! <br>',
+                '{[this.getMsgFromResources()]}',
+                {
+                    getMsgFromResources: function(){
+                        return AppTest.app.bundle.getMsg('panel.html');
+                    }
+                }
+            ],
+            data: {name: 'Joe'}
         });
     }
 });
-
  </code>
  */
 Ext.define('Ext.i18n.Bundle', {
@@ -109,8 +124,7 @@ Ext.define('Ext.i18n.Bundle', {
      * @private
      */
     guessLanguage: function(){
-        return (navigator.language || navigator.browserLanguage
-                || navigator.userLanguage || this.defaultLanguage);
+        return (navigator.language || navigator.browserLanguage || navigator.userLanguage || this.defaultLanguage);
     },
     
     /**
